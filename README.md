@@ -1,10 +1,10 @@
 # cms
-my cms 班级管理系统
-
-管理员账户 600000
-密码 123456
-数据库文件 resources/mySQL/cms01.sql
-配置文件 resources/application.yml  (改端口号，和数据源文件)
+my cms 班级管理系统<br>
+<hr>
+管理员账户 600000  <br>
+密码 123456  <br>
+数据库文件 resources/mySQL/cms01.sql  <br>
+配置文件 resources/application.yml  (改端口号，和数据源文件)  <br>
 
 
 ![image](https://user-images.githubusercontent.com/68849786/197328626-9bd69f93-ae2d-41c2-b00b-f46a4389ff92.png)
