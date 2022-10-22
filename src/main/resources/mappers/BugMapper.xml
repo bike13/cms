@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxxx.cms.dao.BugMapper" >
+  <resultMap id="BaseResultMap" type="com.xxxx.cms.vo.Bug" >
+    <id column="bug_id" property="bugId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="bug_title" property="bugTitle" jdbcType="VARCHAR" />
+    <result column="bug_content" property="bugContent" jdbcType="VARCHAR" />
+    <result column="bug_picture" property="bugPicture" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="solve" property="solve" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    bug_id, user_id, bug_title, bug_content, bug_picture, create_time, solve
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_bug
+    where bug_id = #{bugId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_bug
+    where bug_id = #{bugId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xxxx.cms.vo.Bug" >
+    insert into t_bug (bug_id, user_id, bug_title, 
+      bug_content, bug_picture, create_time, 
+      solve)
+    values (#{bugId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{bugTitle,jdbcType=VARCHAR}, 
+      #{bugContent,jdbcType=VARCHAR}, #{bugPicture,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{solve,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxxx.cms.vo.Bug" >
+    insert into t_bug
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bugId != null" >
+        bug_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="bugTitle != null" >
+        bug_title,
+      </if>
+      <if test="bugContent != null" >
+        bug_content,
+      </if>
+      <if test="bugPicture != null" >
+        bug_picture,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="solve != null" >
+        solve,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bugId != null" >
+        #{bugId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="bugTitle != null" >
+        #{bugTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="bugContent != null" >
+        #{bugContent,jdbcType=VARCHAR},
+      </if>
+      <if test="bugPicture != null" >
+        #{bugPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="solve != null" >
+        #{solve,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xxxx.cms.vo.Bug" >
+    update t_bug
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="bugTitle != null" >
+        bug_title = #{bugTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="bugContent != null" >
+        bug_content = #{bugContent,jdbcType=VARCHAR},
+      </if>
+      <if test="bugPicture != null" >
+        bug_picture = #{bugPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="solve != null" >
+        solve = #{solve,jdbcType=INTEGER},
+      </if>
+    </set>
+    where bug_id = #{bugId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xxxx.cms.vo.Bug" >
+    update t_bug
+    set user_id = #{userId,jdbcType=INTEGER},
+      bug_title = #{bugTitle,jdbcType=VARCHAR},
+      bug_content = #{bugContent,jdbcType=VARCHAR},
+      bug_picture = #{bugPicture,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      solve = #{solve,jdbcType=INTEGER}
+    where bug_id = #{bugId,jdbcType=INTEGER}
+  </update>
+  <select id="queryAllBugs" parameterType="com.xxxx.cms.query.BugQuery" resultType="com.xxxx.cms.vo.Bug">
+    SELECT
+        bug_id, b.user_id, bug_title, bug_content, bug_picture, b.create_time, solve, u.true_name
+    FROM
+        t_bug b INNER JOIN t_user u
+    where 1=1 and b.user_id = u.user_id
+    <if test="bugTitle !=null and bugTitle !=''">
+      and bug_title like concat('%',#{bugTitle},'%')
+    </if>
+    <if test="trueName !=null and trueName !=''">
+      and u.true_name like concat('%',#{trueName},'%')
+    </if>
+    <if test="solve != null">
+      and solve = #{solve}
+    </if>
+  </select>
+
+  <select id="selectUserIdByBugId" resultType="java.lang.Integer">
+    select user_id from t_bug where bug_id = #{bugId}
+  </select>
+
+  <delete id="deleteBatch" >
+    delete from t_bug where bug_id in
+    <foreach collection="array" open="(" close=")" separator="," item="bugId">
+      #{bugId}
+    </foreach>
+  </delete>
+
+  <!--修改为已解决状态-->
+  <update id="updateSolveByBugId" parameterType="int">
+    update t_bug set solve = 1 where bug_id = #{bugId}
+  </update>
+</mapper>

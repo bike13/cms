@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxxx.cms.dao.DataAnalysisServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.xxxx.cms.vo.Speed2" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="video_sp_start" property="videoSpStart" jdbcType="INTEGER" />
+    <result column="video_sp_end" property="videoSpEnd" jdbcType="INTEGER" />
+    <result column="code_sp_start" property="codeSpStart" jdbcType="INTEGER" />
+    <result column="code_sp_end" property="codeSpEnd" jdbcType="INTEGER" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="study_question" property="studyQuestion" jdbcType="VARCHAR" />
+    <result column="class_question" property="classQuestion" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, video_sp_start, video_sp_end, code_sp_start, code_sp_end, note, study_question, 
+    class_question, remark, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xxxx.cms.vo.Speed2" >
+    insert into t_sp (id, user_id, video_sp_start, 
+      video_sp_end, code_sp_start, code_sp_end, 
+      note, study_question, class_question, 
+      remark, update_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{videoSpStart,jdbcType=INTEGER}, 
+      #{videoSpEnd,jdbcType=INTEGER}, #{codeSpStart,jdbcType=INTEGER}, #{codeSpEnd,jdbcType=INTEGER}, 
+      #{note,jdbcType=VARCHAR}, #{studyQuestion,jdbcType=VARCHAR}, #{classQuestion,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxxx.cms.vo.Speed2" >
+    insert into t_sp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="videoSpStart != null" >
+        video_sp_start,
+      </if>
+      <if test="videoSpEnd != null" >
+        video_sp_end,
+      </if>
+      <if test="codeSpStart != null" >
+        code_sp_start,
+      </if>
+      <if test="codeSpEnd != null" >
+        code_sp_end,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="studyQuestion != null" >
+        study_question,
+      </if>
+      <if test="classQuestion != null" >
+        class_question,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="videoSpStart != null" >
+        #{videoSpStart,jdbcType=INTEGER},
+      </if>
+      <if test="videoSpEnd != null" >
+        #{videoSpEnd,jdbcType=INTEGER},
+      </if>
+      <if test="codeSpStart != null" >
+        #{codeSpStart,jdbcType=INTEGER},
+      </if>
+      <if test="codeSpEnd != null" >
+        #{codeSpEnd,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="studyQuestion != null" >
+        #{studyQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="classQuestion != null" >
+        #{classQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xxxx.cms.vo.Speed2" >
+    update t_sp
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="videoSpStart != null" >
+        video_sp_start = #{videoSpStart,jdbcType=INTEGER},
+      </if>
+      <if test="videoSpEnd != null" >
+        video_sp_end = #{videoSpEnd,jdbcType=INTEGER},
+      </if>
+      <if test="codeSpStart != null" >
+        code_sp_start = #{codeSpStart,jdbcType=INTEGER},
+      </if>
+      <if test="codeSpEnd != null" >
+        code_sp_end = #{codeSpEnd,jdbcType=INTEGER},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="studyQuestion != null" >
+        study_question = #{studyQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="classQuestion != null" >
+        class_question = #{classQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xxxx.cms.vo.Speed2" >
+    update t_sp
+    set user_id = #{userId,jdbcType=INTEGER},
+      video_sp_start = #{videoSpStart,jdbcType=INTEGER},
+      video_sp_end = #{videoSpEnd,jdbcType=INTEGER},
+      code_sp_start = #{codeSpStart,jdbcType=INTEGER},
+      code_sp_end = #{codeSpEnd,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      study_question = #{studyQuestion,jdbcType=VARCHAR},
+      class_question = #{classQuestion,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectSpeed" resultType="com.xxxx.cms.query.DataAnalysisQuery" parameterType="com.xxxx.cms.query.IntAndDate">
+    select video_sp_start, video_sp_end, code_sp_start, code_sp_end,note ,true_name,group_id,s.update_time,sign
+    FROM t_user u,t_sp s
+    where u.user_id=s.user_id AND group_id=#{groupId,jdbcType=INTEGER} AND DATE(s.update_time)=#{updateTime}
+  </select>
+  <select id="selectGroupId" resultType="int">
+    SELECT count(*) FROM (select count(*)as grp from t_user group by group_id) t
+  </select>
+    <select id="selectUpdateTime" resultType="date">
+     SELECT DISTINCT DATE(update_time) FROM t_sp
+    </select>
+  <select id="selectConf" resultType="com.xxxx.cms.query.ConfQuery" parameterType="com.xxxx.cms.query.IntAndDate">
+    select q.question,question_state,c.end_time
+    FROM t_conference_questions q,t_conference c
+    where c.id=q.conference_id  AND c.rank_id=2
+    and group_id=#{groupId,jdbcType=INTEGER} AND DATE(c.end_time)=#{updateTime}
+  </select>
+  <select id="selectConfClass" resultType="com.xxxx.cms.query.ConfQuery" parameterType="date">
+    select q.question,question_state,c.end_time
+    FROM t_conference_questions q,t_conference c
+    where c.id=q.conference_id  AND c.rank_id=1
+    AND DATE(c.end_time)=#{updateTime}
+  </select>
+</mapper>

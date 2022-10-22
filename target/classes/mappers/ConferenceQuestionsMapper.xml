@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxxx.cms.dao.ConferenceQuestionsMapper" >
+  <resultMap id="BaseResultMap" type="com.xxxx.cms.vo.ConferenceQuestions" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="conference_id" property="conferenceId" jdbcType="INTEGER" />
+    <result column="emit_id" property="emitId" jdbcType="INTEGER" />
+    <result column="Recipient_id" property="recipientId" jdbcType="INTEGER" />
+    <result column="question" property="question" jdbcType="VARCHAR" />
+    <result column="question_state" property="questionState" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, conference_id, emit_id, Recipient_id, question, question_state, is_valid, group_id, 
+    answer
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_conference_questions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_conference_questions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xxxx.cms.vo.ConferenceQuestions" >
+    insert into t_conference_questions (id, conference_id, emit_id, 
+      Recipient_id, question, question_state, 
+      is_valid, group_id, answer
+      )
+    values (#{id,jdbcType=INTEGER}, #{conferenceId,jdbcType=INTEGER}, #{emitId,jdbcType=INTEGER}, 
+      #{recipientId,jdbcType=INTEGER}, #{question,jdbcType=VARCHAR}, #{questionState,jdbcType=INTEGER}, 
+      #{isValid,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xxxx.cms.vo.ConferenceQuestions" >
+    update t_conference_questions
+    <set >
+      <if test="conferenceId != null" >
+        conference_id = #{conferenceId,jdbcType=INTEGER},
+      </if>
+      <if test="emitId != null" >
+        emit_id = #{emitId,jdbcType=INTEGER},
+      </if>
+      <if test="recipientId != null" >
+        Recipient_id = #{recipientId,jdbcType=INTEGER},
+      </if>
+      <if test="question != null" >
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="questionState != null" >
+        question_state = #{questionState,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xxxx.cms.vo.ConferenceQuestions" >
+    update t_conference_questions
+    set conference_id = #{conferenceId,jdbcType=INTEGER},
+      emit_id = #{emitId,jdbcType=INTEGER},
+      Recipient_id = #{recipientId,jdbcType=INTEGER},
+      question = #{question,jdbcType=VARCHAR},
+      question_state = #{questionState,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!-- 查对 当前会议 的问题 (返回数据表格形式) -->
+  <!--问题编号 会议名称 建议人姓名 问题人 问题描述 问题状态-->
+  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+    q.id,
+    ue.true_name AS emitName,
+    ur.true_name AS recipientname,
+    q.question,
+    q.question_state,
+    c.theme
+    FROM
+    t_conference_questions q
+    LEFT JOIN t_user ue ON q.emit_id = ue.user_id
+    LEFT JOIN t_user ur ON q.Recipient_id = ur.user_id
+    LEFT JOIN t_conference c ON q.conference_id = c.id
+    <where>
+      q.is_valid = 1
+      <if test="conferenceId != null and conferenceId !=''" >
+        and q.conference_id = #{conferenceId,jdbcType=INTEGER}
+      </if>
+      <if test="groupId != null and groupId !=''" >
+        and q.group_id = #{groupId,jdbcType=INTEGER}
+      </if>
+    </where>
+
+  </select>
+
+  <!--  添加会议问题-->
+  <!--  传 接收姓名 问题详情 会议id-->
+  <!--  准备参数  建议人id  问题状态 组号-->
+  <insert id="insertSelective" parameterType="com.xxxx.cms.vo.ConferenceQuestions" >
+    insert into t_conference_questions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="conferenceId != null" >
+        conference_id,
+      </if>
+      <if test="emitId != null" >
+        emit_id,
+      </if>
+      <if test="recipientId != null" >
+        Recipient_id,
+      </if>
+      <if test="question != null" >
+        question,
+      </if>
+      <if test="questionState != null" >
+        question_state,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="conferenceId != null" >
+        #{conferenceId,jdbcType=INTEGER},
+      </if>
+      <if test="emitId != null" >
+        #{emitId,jdbcType=INTEGER},
+      </if>
+      <if test="recipientId != null" >
+        #{recipientId,jdbcType=INTEGER},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="questionState != null" >
+        #{questionState,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--会议问题删除deleteBatch-->
+  <delete id="deleteBatch">
+    delete from
+    t_conference_questions
+    where
+    id
+    in
+    <foreach collection="array" item="id" open="("   separator="," close=")">
+      #{id}
+    </foreach>
+
+  </delete>
+
+
+
+
+</mapper>

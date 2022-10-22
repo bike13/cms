@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxxx.cms.dao.AnswerMapper" >
+  <resultMap id="BaseResultMap" type="com.xxxx.cms.vo.Answer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bug_id" property="bugId" jdbcType="INTEGER" />
+    <result column="brush_id" property="brushId" jdbcType="INTEGER" />
+    <result column="crete_time" property="creteTime" jdbcType="TIMESTAMP" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="man" property="man" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bug_id, brush_id, crete_time, answer, man
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_answer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_answer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xxxx.cms.vo.Answer" >
+    insert into t_answer (id, bug_id, brush_id, 
+      crete_time, answer, man
+      )
+    values (#{id,jdbcType=INTEGER}, #{bugId,jdbcType=INTEGER}, #{brushId,jdbcType=INTEGER}, 
+      #{creteTime,jdbcType=TIMESTAMP}, #{answer,jdbcType=VARCHAR}, #{man,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxxx.cms.vo.Answer" >
+    insert into t_answer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bugId != null" >
+        bug_id,
+      </if>
+      <if test="brushId != null" >
+        brush_id,
+      </if>
+      <if test="creteTime != null" >
+        crete_time,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="man != null" >
+        man,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bugId != null" >
+        #{bugId,jdbcType=INTEGER},
+      </if>
+      <if test="brushId != null" >
+        #{brushId,jdbcType=INTEGER},
+      </if>
+      <if test="creteTime != null" >
+        #{creteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="man != null" >
+        #{man,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xxxx.cms.vo.Answer" >
+    update t_answer
+    <set >
+      <if test="bugId != null" >
+        bug_id = #{bugId,jdbcType=INTEGER},
+      </if>
+      <if test="brushId != null" >
+        brush_id = #{brushId,jdbcType=INTEGER},
+      </if>
+      <if test="creteTime != null" >
+        crete_time = #{creteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="man != null" >
+        man = #{man,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xxxx.cms.vo.Answer" >
+    update t_answer
+    set bug_id = #{bugId,jdbcType=INTEGER},
+      brush_id = #{brushId,jdbcType=INTEGER},
+      crete_time = #{creteTime,jdbcType=TIMESTAMP},
+      answer = #{answer,jdbcType=VARCHAR},
+      man = #{man,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAnswerByBugId" parameterType="int" resultType="java.util.Map">
+    select answer,man from t_answer where bug_id = #{bugId}
+  </select>
+
+  <select id="selectBatch" resultType="java.lang.Integer">
+    select id from t_answer where bug_id in
+    <foreach collection="array" open="(" close=")" separator="," item="bugId">
+      #{bugId}
+    </foreach>
+  </select>
+
+
+  <delete id="deleteAnswerByBugId" parameterType="int">
+    delete from t_answer where bug_id = #{bugId}
+  </delete>
+
+  <delete id="deleteBatchAnswer" >
+    delete from t_answer where id in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="queryByBrushIdAndUserId" resultType="com.xxxx.cms.vo.Answer">
+    select <include refid="Base_Column_List"/> from t_answer where brush_id = #{brushId} and user_id = #{userId}
+  </select>
+
+  <update id="updateAnswerByBrushIdAndUserId">
+    update t_answer set answer = #{answer} where brush_id = #{brushId} and user_id = #{userId}
+  </update>
+
+</mapper>

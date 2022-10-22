@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.cms.dao.ConferenceMapper">
+  <resultMap id="BaseResultMap" type="com.xxxx.cms.vo.Conference">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="theme" jdbcType="VARCHAR" property="theme" />
+    <result column="rank_id" jdbcType="INTEGER" property="rankId" />
+    <result column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="user_name" jdbcType="INTEGER" property="userName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="details" jdbcType="VARCHAR" property="details" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, theme, rank_id, room_id, user_name, create_time, end_time, details
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_conference
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xxxx.cms.vo.Conference">
+    insert into t_conference (id, theme, rank_id,
+      room_id, user_name, create_time, 
+      end_time, details)
+    values (#{id,jdbcType=INTEGER}, #{theme,jdbcType=VARCHAR}, #{rankId,jdbcType=INTEGER},
+      #{roomId,jdbcType=INTEGER}, #{userName,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{details,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xxxx.cms.vo.Conference">
+    insert into t_conference
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="theme != null">
+        theme,
+      </if>
+      <if test="rankId != null">
+        rank_id,
+      </if>
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="details != null">
+        details,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="theme != null">
+        #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="rankId != null">
+        #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null">
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="details != null">
+        #{details,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xxxx.cms.vo.Conference">
+    update t_conference
+    <set>
+      <if test="theme != null">
+        theme = #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="rankId != null">
+        rank_id = #{rankId,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null">
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="details != null">
+        details = #{details,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xxxx.cms.vo.Conference">
+    update t_conference
+    set theme = #{theme,jdbcType=VARCHAR},
+      rank_id = #{rankId,jdbcType=INTEGER},
+      room_id = #{roomId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      details = #{details,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有的会议-->
+  <select id="selectByParams" parameterType="com.xxxx.cms.query.ConferenceQuery" resultType="com.xxxx.cms.vo.Conference">
+    select
+    c.id, c.theme, c.rank_id, c.room_id, c.user_name, cr.room_number , c.create_time, c.end_time, c.details
+    from
+    t_conference c
+    left join
+    t_conference_room cr
+    on
+    c.room_id = cr.id
+    <where>
+      <if test="rankId ==null or rankId ==''">
+        and  c.rank_id = 1
+      </if>
+      <if test="rankId !=null and rankId !=''">
+        and  c.rank_id = #{rankId}
+      </if>
+      <if test="theme !=null and theme !=''">
+        and  c.theme like concat('%',#{theme},'%')
+      </if>
+      <if test="roomNumber !=null and roomNumber !=''">
+        and cr.room_number = #{roomNumber}
+      </if>
+     </where>
+  </select>
+
+  <!--根据id查会议-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    c.id, c.theme, c.rank_id, c.room_id, c.user_name, cr.room_number , c.create_time, c.end_time, c.details
+    from
+    t_conference c
+    left join
+    t_conference_room cr
+    on
+    c.room_id = cr.id
+    where c.id = #{id,jdbcType=INTEGER}
+  </select>
+
+<!--查所有等级-->
+  <select id="queryAllRank" resultType="java.lang.Integer">
+    select
+    DISTINCT rank_id
+    from
+    t_conference
+  </select>
+
+
+  <!--查详情-->
+  <select id="queryDetailsById" resultType="java.lang.String">
+    select
+    details
+    from
+    t_conference
+    where
+    id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--//查本组会议 rank_id=2  userId对应对象的组id 查所有对象,包含创建人的姓名-->
+  <select id="queryGroupConferenceByNow" resultType="com.xxxx.cms.vo.Conference" parameterType="com.xxxx.cms.query.ConferenceNowQuery">
+    select
+    c.id, c.theme, c.rank_id, c.room_id, c.user_name, cr.room_number , c.create_time, c.end_time, c.details
+    from
+    t_conference c
+    left join
+    t_conference_room cr
+    on
+    c.room_id = cr.id
+    WHERE
+	c.rank_id = 2
+	AND user_name IN ( SELECT true_name FROM t_user WHERE group_id IN
+	( SELECT group_id FROM t_user WHERE user_id = #{userId,jdbcType=INTEGER} ) )
+    <if test="roomNumber !=null and roomNumber !=''">
+      and cr.room_number = #{roomNumber}
+    </if>
+    <if test="createTimeStr !=null and createTimeStr !=''">
+      and date( c.create_time ) = #{createTimeStr}
+    </if>
+    <if test="rankId !=null and rankId !=''">
+      and c.rank_id = #{rankId}
+    </if>
+  </select>
+
+  <!--//查班级会议 rank_id=1-->
+  <select id="queryClassConferenceByNow" resultType="com.xxxx.cms.vo.Conference" parameterType="com.xxxx.cms.query.ConferenceNowQuery">
+    select
+    c.id, c.theme, c.rank_id, c.room_id, c.user_name, cr.room_number , c.create_time, c.end_time, c.details
+    from
+    t_conference c
+    left join
+    t_conference_room cr
+    on
+    c.room_id = cr.id
+    WHERE
+    c.rank_id = 1
+    <if test="roomNumber !=null and roomNumber !=''">
+      and cr.room_number = #{roomNumber}
+    </if>
+    <if test="createTimeStr !=null and createTimeStr !=''">
+      and date( c.create_time ) = #{createTimeStr}
+    </if>
+    <if test="rankId !=null and rankId !=''">
+      and c.rank_id = #{rankId}
+    </if>
+  </select>
+
+
+  <!--批量删除-->
+  <delete id="deleteBatch">
+    delete from
+    t_conference
+    where
+    id
+    in
+    <foreach collection="array" item="id" open="("   separator="," close=")">
+      #{id}
+    </foreach>
+
+  </delete>
+
+
+</mapper>
